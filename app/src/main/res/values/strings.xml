@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">Future</string>
+    <string name="app_name">Futures</string>
+
+    <string name="result">预计持仓均价: ¥%.2f</string>
 </resources>
