@@ -15,9 +15,9 @@ public class MainActivity extends AppCompatActivity {
 
     private Context context;
     private EditText et_x1, et_x2, et_y1, et_y2;
-    private TextView tv_result;
+    private TextView tv_sub_all, tv_sub_demand_all, tv_result, tv_all;
 
-    private float x1, x2, y1, y2, result;
+    private float x1, x2, y1, y2, subAll, subDemandAll, result, all;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +34,11 @@ public class MainActivity extends AppCompatActivity {
         et_x2 = findViewById(R.id.et_x2);
         et_y1 = findViewById(R.id.et_y1);
         et_y2 = findViewById(R.id.et_y2);
+
+        tv_sub_all = findViewById(R.id.tv_sub_all);
         tv_result = findViewById(R.id.tv_result);
+        tv_sub_demand_all = findViewById(R.id.tv_sub_demand_all);
+        tv_all = findViewById(R.id.tv_all);
 
         if (x1 > 0) {
             et_x1.setText(String.valueOf(x1));
@@ -52,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             et_y2.setText(String.valueOf(y2));
         }
 
-        tv_result.setText(String.format(getResources().getString(R.string.result), result));
+        calculate();
     }
 
     private void initValues() {
@@ -60,7 +64,10 @@ public class MainActivity extends AppCompatActivity {
         x2 = SharePreUtil.getInstance().getValue(context, SharePreUtil.KEY_X2);
         y1 = SharePreUtil.getInstance().getValue(context, SharePreUtil.KEY_Y1);
         y2 = SharePreUtil.getInstance().getValue(context, SharePreUtil.KEY_Y2);
+        subAll = SharePreUtil.getInstance().getValue(context, SharePreUtil.KEY_SUB_ALL);
+        subDemandAll = SharePreUtil.getInstance().getValue(context, SharePreUtil.KEY_SUB_DEMAND_ALL);
         result = SharePreUtil.getInstance().getValue(context, SharePreUtil.KEY_RESULT);
+        all = SharePreUtil.getInstance().getValue(context, SharePreUtil.KEY_ALL);
     }
 
     private void initListener() {
@@ -158,13 +165,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void calculate() {
-        if (x1 > 0 && x2 > 0 && y1 > 0 && y2 > 0) {
-            result = (x1 * y1 + x2 * y2) / (x2 + x1);
-            Log.d("calculate", "RESULT: " + result);
-            tv_result.setText(String.format(getResources().getString(R.string.result), result));
+        if (x1 > 0 && y1 > 0) {
+            subAll = x1 * y1;
         } else {
-            tv_result.setText(String.format(getResources().getString(R.string.result), 0.00f));
+            subAll = 0;
         }
+        tv_sub_all.setText(String.format(getResources().getString(R.string.sub_all), subAll));
+
+        if (x2 > 0 && y2 > 0) {
+            subDemandAll = x2 * y2;
+        } else {
+            subDemandAll = 0;
+        }
+        tv_sub_demand_all.setText(String.format(getResources().getString(R.string.sub_all), subDemandAll));
+
+
+        if (subAll > 0 && subDemandAll > 0) {
+            all = subAll + subDemandAll;
+            result = all / (x2 + x1);
+            Log.d("calculate", "PRE_ALL:" + subAll + " DEMAND_ALL:" + subDemandAll + " ALL:" + all + " RESULT:" + result);
+        } else {
+            result = 0;
+            all = 0;
+        }
+        tv_result.setText(String.format(getResources().getString(R.string.result), result));
+        tv_all.setText(String.format(getResources().getString(R.string.all), all));
     }
 
     @Override
@@ -175,5 +200,8 @@ public class MainActivity extends AppCompatActivity {
         SharePreUtil.getInstance().saveValue(context, SharePreUtil.KEY_Y1, y1);
         SharePreUtil.getInstance().saveValue(context, SharePreUtil.KEY_Y2, y2);
         SharePreUtil.getInstance().saveValue(context, SharePreUtil.KEY_RESULT, result);
+        SharePreUtil.getInstance().saveValue(context, SharePreUtil.KEY_SUB_ALL, subAll);
+        SharePreUtil.getInstance().saveValue(context, SharePreUtil.KEY_SUB_DEMAND_ALL, subDemandAll);
+        SharePreUtil.getInstance().saveValue(context, SharePreUtil.KEY_ALL, all);
     }
 }

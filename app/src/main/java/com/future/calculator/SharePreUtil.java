@@ -17,7 +17,10 @@ class SharePreUtil {
     static final String KEY_X2 = "X2";
     static final String KEY_Y1 = "Y1";
     static final String KEY_Y2 = "Y2";
+    static final String KEY_SUB_ALL = "SUB_ALL";
     static final String KEY_RESULT = "RESULT";
+    static final String KEY_SUB_DEMAND_ALL = "SUB_DEMAND_ALL";
+    static final String KEY_ALL = "ALL";
 
     private volatile static SharePreUtil instance;
 
